@@ -20,3 +20,29 @@ Our original aim was to identify species of bat that were able to carry coronavi
 However, initial data showed that it is likely that most, if not all, bat species can carry Coronavirus. Coronavirus positivity strongly associated with number of bats caught.
 
 ![total](img/Total.png)
+
+## Problem Statement
+
+Predict factors that make it more likely for a particular bat species to be a potential coronavirus reservoir host
+
+- Geographical or Environmental Characteristics
+- Morphological or Other Biological Traits
+- Phylogenetic Grouping
+
+## Our Data
+
+- Bat CoV Positivity (Dataset manually collected from 100+ published papers. Look for coronavirus positivity rates among samples from bats)
+- PanTHERIA (Dataset Global mammalian species-level dataset of life-history, ecological and geographical traits)
+- EltonTraits1.0 (Global species-level foraging attributes of mammals)
+- Bat Ecology / Viral Diversity (Bat specific dataset used in a study on viral diversity and reservoir status in a Canadian study)
+- Zoonotic Infectious Diseases (Dataset used in a study on zoonotic emerging infectious diseases, including geographical / environmental features)
+
+## Features
+
+We divided the species into 2 groups, high CoV prevalence rate vs low CoV prevalence. Features are selected base on univariate logistic regression on high vs low classification.
+
+![features](img/Density_Plot.png)
+
+Our features can be roughly grouped into six categories.
+
+![features2](img/MainFeatures.jpg)
