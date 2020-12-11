@@ -14,3 +14,9 @@ About 20% of the approximately 5,000 species of mammals are bats (order Chiropte
 - The SARS-CoV-2 virus that led to the COVID-19 pandemic most likely originated from an Asian bat species
 
 ## Our Challenges
+
+Our original aim was to identify species of bat that were able to carry coronavirus, with focus on Bat characteristics & Coronavirus positivity (as a binary outcome).
+
+However, initial data showed that it is likely that most, if not all, bat species can carry Coronavirus. Coronavirus positivity strongly associated with number of bats caught.
+
+![total](https://bat-cov-positivity.org/wp-content/uploads/2020/11/Total.png)
