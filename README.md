@@ -1,4 +1,6 @@
-# Predicting Bat Coronavirus Positivity (w/ Machine Learning)
+# Predicting Bat Coronavirus Positivity with Machine Learning
+
+## Website: [https://bat-cov-positivity.org/home/]
 
 ## Abstract
 
@@ -10,3 +12,5 @@ About 20% of the approximately 5,000 species of mammals are bats (order Chiropte
 - Serve as reservoir hosts of many deadly viruses (e.g. Ebola, Hendra, Nipah, SARS-type coronaviruses)
 - Scientists do research on bats worldwide to study relationships between bats and viruses
 - The SARS-CoV-2 virus that led to the COVID-19 pandemic most likely originated from an Asian bat species
+
+## Our Challenges
