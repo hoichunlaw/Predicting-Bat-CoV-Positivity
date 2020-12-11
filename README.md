@@ -19,4 +19,4 @@ Our original aim was to identify species of bat that were able to carry coronavi
 
 However, initial data showed that it is likely that most, if not all, bat species can carry Coronavirus. Coronavirus positivity strongly associated with number of bats caught.
 
-![total](https://bat-cov-positivity.org/wp-content/uploads/2020/11/Total.png)
+![total](img/Total.png)
