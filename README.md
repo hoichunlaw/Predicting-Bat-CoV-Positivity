@@ -46,3 +46,16 @@ We divided the species into 2 groups, high CoV prevalence rate vs low CoV preval
 Our features can be roughly grouped into six categories.
 
 ![features2](img/MainFeatures.jpg)
+
+## Feature Engineering
+
+From correlation heat map, we can see features can be roughly grouped in to 2 main categories. Top left hand square corresponds to natural features, and bottom right hand square corresponds to man-made features.
+
+![heatmap](img/Feature-correlation.png)
+
+Correlation between weather variables e.g. temperature and precipitation is high. We perform DBSCAN clustering on 2D plot of temperature vs precipitation and use these clusters for subsequent modeling. This is to reduce inter-variable correlations.
+
+![weather1](img/weather1.png)
+![weather1](img/weather2.png)
+
+## Modeling
