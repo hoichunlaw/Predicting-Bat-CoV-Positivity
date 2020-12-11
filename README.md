@@ -1,8 +1,8 @@
 # Predicting Bat Coronavirus Positivity with Machine Learning
 
-## Website: https://bat-cov-positivity.org/home/
-## Paper: https://docs.google.com/document/d/1FLlotUx1XfFxBzky489_72njXnUz16bHtqIj62QFxO0/edit?usp=sharing
-## Summary Slides: https://docs.google.com/presentation/d/13Ot_wj25HCAfJi9_KOllAUaPXitvok93bEULxCFregQ/edit?usp=sharing
+## [Website](https://bat-cov-positivity.org/home/)
+## [Paper](https://docs.google.com/document/d/1FLlotUx1XfFxBzky489_72njXnUz16bHtqIj62QFxO0/edit?usp=sharing)
+## [Summary Slides](https://docs.google.com/presentation/d/13Ot_wj25HCAfJi9_KOllAUaPXitvok93bEULxCFregQ/edit?usp=sharing)
 
 ## Abstract
 
