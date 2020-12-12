@@ -65,16 +65,22 @@ We have two modeling approaches.
 - Model coronavirus prevalence rate with Poisson regression model
 - High prevalence vs low prevalence binary classification
 
+### Poisson Regression
+
 ![rootogram](img/rootogram.png)
 
 - Stepwise forward inclusion of variables base on AIC
 - RMSE ~5.5
 - Reasonable fit except under-fitting at zero counts and high extreme counts
 
+### Generalized Boosted Model
+
 ![GBM](img/GBM.jpg)
 
 - Model accuracy ~74%
 - Mammal & poultry ecological variables appear to have a heavy influence on bat coronavirus positivity
+
+### Model Inference
 
 ![inference](img/inference.png)
 
