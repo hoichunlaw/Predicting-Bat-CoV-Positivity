@@ -1,0 +1,155 @@
+---
+title: "Model"
+author: "The Dark Knight"
+date: "10/5/2020"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2);library(gridExtra);library(aod)
+library(hrbrthemes);library(dplyr);library(tidyr);library(viridis)
+library(gmodels)
+library(ROCR);library(caret)
+library(mcprofile);library(countreg);library(MASS);library(msme);library(pscl);library(boot);library(gbm)
+```
+
+```{r}
+# load data
+df.train <- read.csv("/Users/hoichunlaw/Documents/w210/data/train_data_with_clusters_DBSCAN.csv")
+df.test <- read.csv("/Users/hoichunlaw/Documents/w210/data/test_data_with_clusters_DBSCAN.csv")
+#names(df)
+```
+
+```{r}
+# data manipulation
+df.train$cluster_location <- factor(df.train$cluster_location)
+df.train$cluster_weather <- factor(df.train$cluster_weather)
+df.train$cluster_weather_DBSCAN <- factor(df.train$cluster_weather_DBSCAN)
+df.train$PhyloClust56 <- factor(df.train$PhyloClust56)
+df.train$AET_divided_by_PET <- df.train$X30.1_AET_Mean_mm / df.train$X30.2_PET_Mean_mm
+df.train$log_poultry <- log(df.train$poultry)
+df.train$log_livestock_mam <- log(df.train$livestock_mam)
+
+df.test$cluster_location <- factor(df.test$cluster_location)
+df.test$cluster_weather <- factor(df.test$cluster_weather)
+df.test$cluster_weather_DBSCAN <- factor(df.test$cluster_weather_DBSCAN)
+df.test$PhyloClust56 <- factor(df.test$PhyloClust56)
+df.test$AET_divided_by_PET <- df.test$X30.1_AET_Mean_mm / df.test$X30.2_PET_Mean_mm
+df.test$log_poultry <- log(df.test$poultry)
+df.test$log_livestock_mam <- log(df.test$livestock_mam)
+```
+
+\newpage
+## Build Poisson Regression with stepwise forward method base on AIC
+
+```{r}
+# select feature set
+features = c("X27.4_HuPopDen_Change", "cluster_weather_DBSCAN", "cluster_location", 
+             "X30.1_AET_Mean_mm", "X30.2_PET_Mean_mm",
+             "AET_divided_by_PET", "earth2_trees_everg", "crop_change", 
+             "mamdiv", "earth11_barren",
+             "log_poultry", "log_livestock_mam", "earth7_veg_manag", "PhyloClust56")
+
+# select data with sample size > 50
+df.train <- df.train[df.train$Total > 50,]
+df.train$count <- round(df.train$Positive / df.train$Total * 100)
+
+empty.mod <- glm(count ~ 1, family=poisson(link=log), data=df.train)
+full.mod <- glm(count ~ ., family=poisson(link=log), data=df.train[,c(features, "count")])
+forw.sel <- step(object=empty.mod, scope = list(upper=full.mod), direction="forward", k=log(nrow(df.train)), trace=TRUE)
+```
+```{r}
+# final model
+pGLM <- glm(count ~ PhyloClust56 + crop_change + X30.2_PET_Mean_mm + 
+                cluster_weather_DBSCAN + log_livestock_mam + X27.4_HuPopDen_Change + 
+                cluster_location + mamdiv + earth11_barren, 
+            family = poisson(link=log), data=df.train)
+
+summary(pGLM)
+rootogram(pGLM, max=30)
+```
+
+Prediction on unseen species
+
+```{r}
+intercept = rep(1, nrow(df.test))
+Phylo_3 <- ifelse(df.test$PhyloClust56 == "PC3", 1, 0)
+Phylo_4 <- ifelse(df.test$PhyloClust56 == "PC4", 1, 0)
+Phylo_5 <- ifelse(df.test$PhyloClust56 == "PC5", 1, 0)
+Phylo_6 <- ifelse(df.test$PhyloClust56 == "PC6", 1, 0)
+Phylo_7 <- ifelse(df.test$PhyloClust56 == "PC7", 1, 0)
+crop_change <- df.test$crop_change
+pet <- df.test$X30.2_PET_Mean_mm
+cluster_weather_0 <- ifelse(df.test$cluster_weather_DBSCAN == 0, 1, 0)
+cluster_weather_1 <- ifelse(df.test$cluster_weather_DBSCAN == 1, 1, 0)
+cluster_weather_2 <- ifelse(df.test$cluster_weather_DBSCAN == 2, 1, 0)
+log_livestock_mam <- df.test$log_livestock_mam
+HuPopChange <- df.test$X27.4_HuPopDen_Change
+cluster_location_1 <- ifelse(df.test$cluster_location == "America", 1, 0)
+cluster_location_2 <- ifelse(df.test$cluster_location == "Asia", 1, 0)
+cluster_location_3 <- ifelse(df.test$cluster_location == "Australia", 1, 0)
+cluster_location_4 <- ifelse(df.test$cluster_location == "Europe", 1, 0)
+mamdiv <- df.test$mamdiv
+earth11 <- df.test$earth11_barren
+
+cm <- cbind(intercept, Phylo_3, Phylo_4, Phylo_5, Phylo_6, Phylo_7, crop_change, pet, 
+            cluster_weather_0, cluster_weather_1, cluster_weather_2, log_livestock_mam,
+            HuPopChange, cluster_location_1, cluster_location_2, cluster_location_3, cluster_location_4,
+            mamdiv, earth11)
+
+
+combo <- mcprofile(object=pGLM, CM=cm)
+
+ci.result <- exp(confint(combo, level=0.95, adjust = "none"))
+df.result <- data.frame(estimate=ci.result$estimate, ci = ci.result$confint)
+write.csv(df.result, "ci_result.csv")
+```
+
+\newpage
+## Build GBM for high vs low prevalence
+
+```{r}
+features = c("X27.4_HuPopDen_Change", "cluster_weather_DBSCAN", "cluster_location", "X30.1_AET_Mean_mm", 
+             "X30.2_PET_Mean_mm",
+             "AET_divided_by_PET", "earth2_trees_everg", "crop_change", "mamdiv", "earth11_barren",
+             "log_poultry", "log_livestock_mam", "earth7_veg_manag", "PhyloClust56")
+
+GBM_model_bernoulli <- gbm(formula = label ~ . , distribution = "bernoulli",
+                           data = df.train[,c("label", features)], n.trees = 50, shrinkage = 0.1,
+                           interaction.depth = 4, cv.folds = 10)
+
+print(GBM_model_bernoulli)
+summary(GBM_model_bernoulli)
+```
+
+```{r}
+# plot loss function as a result of n trees added to the ensemble
+optimal_cv_bernoulli <- gbm.perf(GBM_model_bernoulli, method = "cv")
+# can also test out of bag estimator
+optimal_oob <- gbm.perf(GBM_model_bernoulli, method = "OOB")
+print(optimal_cv_bernoulli)
+print(optimal_oob)
+
+# in sample fit quality
+in_sample_fit <-predict(object = GBM_model_bernoulli, 
+                        newdata = df.train,
+                        n.trees = optimal_cv_bernoulli,
+                        type = "response")
+output_bernoulli <- as.factor(ifelse(in_sample_fit>0.5, 1,0))
+#Train_data$CoVStatus <- as.factor(Train_data$CoVStatus)
+confusionMatrix(output_bernoulli, as.factor(df.train$label))
+```
+
+```{r}
+# out of smaple fit
+out_sample_fit <- predict(object = GBM_model_bernoulli,
+                          newdata = df.test,
+                          n.trees = optimal_cv_bernoulli,
+                          type = "response")
+df.GBM.result <- data.frame(binary_prediction=out_sample_fit)
+write.csv(df.GBM.result, "/Volumes/D/MIDS/w210/GBM.csv")
+```
+
