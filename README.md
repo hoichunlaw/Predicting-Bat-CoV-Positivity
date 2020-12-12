@@ -44,6 +44,8 @@ We divided the species into 2 groups, high CoV prevalence rate vs low CoV preval
 
 ![features](img/Density_Plot.png)
 
+![map](img/map.png)
+
 Our features can be roughly grouped into six categories.
 
 ![features2](img/MainFeatures.jpg)
