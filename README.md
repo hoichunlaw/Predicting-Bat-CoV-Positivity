@@ -88,3 +88,32 @@ We have two modeling approaches.
 - Bats in geographical ranges with HIGHER mammal biodiversity => lower CoV prevalence
 - Weather, land use, and ecological factors come after mammalian biodiversity
 
+## Prediction & Findings
+
+### Prediction Process 
+
+Constructed 95% Confidence Interval with Poisson Regression, and then cross-check with GBM model. Bat species is flagged as “high CoV risk” when both models converge.
+
+![pred](img/Prediction.png)
+
+### Geographical Location
+
+Attempted to predict the coronavirus risk in Rhinolophus bats- thought to be a major reservoir of SARS related coronaviruses.
+
+![loc](img/bat_location.png)
+
+### Findings
+
+- Factors that increase the risk of high coronavirus prevalence among bats include reduced mammalian diversity and low temperature / humidity
+- Weather, land use and ecological factors have higher explanatory power than bat characteristics
+- Our models predict that 5 species of Rhinolophus bats which come from the Philippines are likely to have a high coronavirus prevalence
+
+## Possible Future Studies
+
+- Using the species distribution of mammals and land use data, aim to predict potential intermediate hosts that may result in coronavirus spillover infections from bats to humans
+- Choosing a specific bat related zoonosis where index cases are more clearly mapped out, and using available datasets, aim to predict potential areas with a high likelihood of future cases
+
+## Footnote
+
+- Deforestation and destruction of animal habitats likely contribute to the higher incidence of emerging infectious diseases
+- The importance of the loss of mammalian diversity to predict the outcome likely reflects this point specifically
