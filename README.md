@@ -59,3 +59,26 @@ Correlation between weather variables e.g. temperature and precipitation is high
 ![weather1](img/weather2.png)
 
 ## Modeling
+
+We have two modeling approaches. 
+
+- Model coronavirus prevalence rate with Poisson regression model
+- High prevalence vs low prevalence binary classification
+
+![rootogram](img/rootogram.png)
+
+- Stepwise forward inclusion of variables base on AIC
+- RMSE ~5.5
+- Reasonable fit except under-fitting at zero counts and high extreme counts
+
+![GBM](img/GBM.jpg)
+
+- Model accuracy ~74%
+- Mammal & poultry ecological variables appear to have a heavy influence on bat coronavirus positivity
+
+![inference](img/inference.png)
+
+- Mammalian biodiversity plays an important role in both models
+- Bats in geographical ranges with HIGHER mammal biodiversity => lower CoV prevalence
+- Weather, land use, and ecological factors come after mammalian biodiversity
+
